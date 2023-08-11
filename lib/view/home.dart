@@ -13,8 +13,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final LeadController leadController = Get.put(LeadController());
-
-
+  bool isLoading = true;
   @override
   void initState() {
     callApi();
@@ -23,6 +22,7 @@ class _HomeState extends State<Home> {
   callApi()async{
     await leadController.fetchLeads();
     setState(() {
+      isLoading = false;
     });
   }
   @override
@@ -33,14 +33,15 @@ class _HomeState extends State<Home> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
       ),
-      body: Obx((){
-        return ListView.builder(
+      body: isLoading?
+      Center(child:
+      CircularProgressIndicator(),):
+          ListView.builder(
           itemCount: leadController.leads.length,
           itemBuilder: (context, index) {
             var lead = leadController.leads[index];
             print(leadController.leads.length);
-            print("Vandana");
-            return Container(
+            return  Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height/4.5,
               decoration: BoxDecoration(
@@ -176,9 +177,7 @@ class _HomeState extends State<Home> {
               ),
             );
           },
-        );
-      }
-      )
+        )
     );
   }
 }
